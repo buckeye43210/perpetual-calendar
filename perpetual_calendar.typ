@@ -1,6 +1,80 @@
 // Perpetual Calendar, 1900-based 28-year cycle
 
-#set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.38in, left: 0.75in, right: 0.48in), numbering: none)
+/// Perpetual Calendar Cover Page (Typst)
+
+#set page(width: 5.5in, height: 8.5in, margin: (x: 0.5in, y: 0.7in), numbering: none)
+
+#show heading: none
+
+#align(center + horizon)[
+  #box(
+    width: 88%,
+    inset: 0.5in,
+    radius: 10pt,
+    stroke: 2pt + luma(60),
+    fill: luma(250)
+  )[
+    #text(
+      38pt,
+      weight: "bold",
+      fill: navy
+    )[Perpetual Calendar]
+
+    #v(18pt)
+
+    #text(
+      19pt,
+      weight: "medium",
+      fill: navy.darken(15%)
+    )[Covering Gregorian Years \
+    1900-2300]
+
+    #v(1.8em)
+
+    #text(
+      13pt,
+      weight: "light",
+      fill: luma(90)
+    )[
+    #align(left)[
+      Instantly find the calendar for any Gregorian year.
+      <br>
+      Ideal for planning, genealogy, date validation, and history.<br>
+      <br>
+      #v(0.5em)
+      Calendars for all possible years
+      - Indexed for quick reference
+      - 28-year cycle instructions
+      ]
+    ]
+
+    #v(1.2em)
+
+    #line(length: 60%, stroke: 1.8pt + navy.darken(20%))
+
+    #v(0.3em)
+
+    #text(11.5pt, fill: navy.darken(30%), weight: "medium")[Created using Typst, 2025]
+    
+    #v(1em)
+
+    #line(length: 45%, stroke: 0.7pt + luma(120))
+
+    #v(0.3em)
+    #align(left)[
+    #text(10.5pt, fill: luma(80), weight: "light")[
+      This work is dedicated to the public domain under the
+      <br>
+      #link("https://creativecommons.org/publicdomain/zero/1.0/")[
+        Creative Commons Zero (CC0 1.0) license
+      ].
+      <br>
+      You may freely share, remix, adapt, and use it for any purpose, even commercially, with no restrictions.
+      ]]
+  ]
+]
+
+#set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.38in, left: 0.85in, right: 0.48in), numbering: none)
 #set text(font: ("Liberation Serif", "DejaVu Serif"), size: 10pt)
 
 // Month and weekday
@@ -130,27 +204,28 @@
   #box(width: 94%, inset: 10pt, radius: 8pt, stroke: 1.2pt + luma(130))[
     #set par(justify: true, leading: 0.7em)
     #align(left)[
-      There are only *14 possible calendars* (A–N) in the Gregorian system.
+      The Gregorian system only has *14 possible calendars* (A–N).
 
-      To find the correct page for any year:
-      1. Determine weekday of *Jan 1* that year (Sun=0, Mon=1 … Sat=6)
-      2. If the year is a leap year → add 7
-      3. Take result mod 14 → number = letter (0=A … 13=N)
+      To find the correct calendar for any year:
+      1. Determine *Jan 1* weekday for that year \
+         (Sun=0, Mon=1, Tue=2, Wed=3 … Sat=6)
+      2. If it's a leap year → add 7
+      3. Resulting number maps to letter (0=A … 13=N)
 
       #v(.5em)
-      *28-year cycle table* (repeats forever, except century-skip years)\
-      *Base year: 1900. Row Index = (year - 1900) mod 28*\
-      *For century-skip years: Use weekday method*
+      *28-year cycle* (repeats forever, except century-skip years)\
+      *Base year: 1900. Letter Index = (Year - 1900) mod 28*\
+      *For century-skip years: Use weekday method.*
     ]
     #table(
       columns: 8,
-      inset: 9pt,
+      inset: 3pt,
       stroke: none,
-      column-gutter: 10pt,
-      row-gutter: 6pt,
+      column-gutter: 6pt,
+      row-gutter: 1pt,
       table.header(
-        [*mod28*],[*Ltr*],[*mod28*],[*Ltr*],
-        [*mod28*],[*Ltr*],[*mod28*],[*Ltr*],
+        [*Mod28*],[*Ltr*],[*Mod28*],[*Ltr*],
+        [*Mod28*],[*Ltr*],[*Mod28*],[*Ltr*],
       ),
       "0",  "B",  "7",  "C",  "14", "E",  "21", "G",
       "1",  "C",  "8",  "K",  "15", "F",  "22", "A",
@@ -165,7 +240,6 @@
     #align(left)[
       - 2026 → index: 2026-1900=126, mod 28 = 14 → letter E
       - 2000 → index: 2000-1900=100, mod 28 = 16 → letter N
-      - 2100 → index: 2100-2001=099, mod 28 = 15 → letter F
       - 2025 → index: 2025-1900=125, mod 28 = 13 → letter D
     ]
   ]
