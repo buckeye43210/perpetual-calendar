@@ -1,6 +1,6 @@
 // Perpetual Calendar, 1900-based 28-year cycle
 
-#set page(width: 5.5in, height: 8.5in, margin: (x: 0.38in, y: 0.48in), numbering: none)
+#set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.38in, left: 0.75in, right: 0.48in), numbering: none)
 #set text(font: ("Liberation Serif", "DejaVu Serif"), size: 10pt)
 
 // Month and weekday
@@ -110,13 +110,13 @@
           gutter: 3pt,
           ..weekdays.map(w => text(size: 8pt, weight: "medium", fill: gray.darken(30%), w))
         )
-        #align(right)[
+        #align(left)[
           #grid(columns: 7, gutter: 3pt, row-gutter: 5pt, ..cells)
         ]
       ]
     )
   }
-  grid(columns: 4, rows: 3, column-gutter: 12pt, row-gutter: 10pt, ..months)
+  grid(columns: 3, rows: 4, column-gutter: 3pt, row-gutter: 5pt, ..months)
   if idx < 13 { pagebreak() }
 }
 
@@ -137,9 +137,10 @@
       2. If the year is a leap year → add 7
       3. Take result mod 14 → number = letter (0=A … 13=N)
 
-      #v(1em)
-      *28-year cycle table* (repeats forever, except century-skip years)
-      *Base year: 1900. Row index = year - 1900 mod 28*
+      #v(.5em)
+      *28-year cycle table* (repeats forever, except century-skip years)\
+      *Base year: 1900. Row Index = (year - 1900) mod 28*\
+      *For century-skip years: Use weekday method*
     ]
     #table(
       columns: 8,
@@ -164,7 +165,7 @@
     #align(left)[
       - 2026 → index: 2026-1900=126, mod 28 = 14 → letter E
       - 2000 → index: 2000-1900=100, mod 28 = 16 → letter N
-      - 2100 → index: 2100-1900=200, mod 28 = 04 → letter M
+      - 2100 → index: 2100-2001=099, mod 28 = 15 → letter F
       - 2025 → index: 2025-1900=125, mod 28 = 13 → letter D
     ]
   ]
