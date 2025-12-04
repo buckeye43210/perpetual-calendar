@@ -1,49 +1,51 @@
+// Perpetual Calendar, 1900-based 28-year cycle
+
 #set page(width: 5.5in, height: 8.5in, margin: (x: 0.38in, y: 0.48in), numbering: none)
 #set text(font: ("Liberation Serif", "DejaVu Serif"), size: 10pt)
 
-#let month-names = ("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
-#let weekdays = ("Su","Mo","Tu","We","Th","Fr","Sa")
+// Month and weekday
+#let month_names = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+#let weekdays = ("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa")
 
-#let days-in-month(m, leap) = {
-  if m == 2 { if leap {29} else {28} }
-  else if m == 4 or m == 6 or m == 9 or m == 11 {30}
-  else {31}
+#let is_leap(y) = calc.rem(y, 4) == 0 and (calc.rem(y, 100) != 0 or calc.rem(y, 400) == 0)
+#let jan1_weekday(y) = calc.rem(datetime(year: y, month: 1, day: 1).weekday(), 7)
+
+// 14 calendar layouts A-N
+#let calendar_letters = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N")
+#let calendar_letter(jan1wd, leap) = calendar_letters.at(calc.rem(jan1wd + (if leap { 7 } else { 0 }), 14))
+#let letter(y) = calendar_letter(jan1_weekday(y), is_leap(y))
+
+#let days_in_month(m, leap) = {
+  if m == 2 { if leap { 29 } else { 28 } }
+  else if m == 4 or m == 6 or m == 9 or m == 11 { 30 }
+  else { 31 }
 }
 
-#let first-wd-of-month(jan1wd, m, leap) = {
+#let first_wd_of_month(jan1wd, m, leap) = {
   if m == 1 { jan1wd }
   else {
-    let prev-days = range(1, m).map(mm => days-in-month(mm, leap and mm >= 2)).sum()
-    calc.rem(prev-days + jan1wd, 7)
+    let prev_days = range(1, m).map(mm => days_in_month(mm, leap)).sum()
+    calc.rem(prev_days + jan1wd, 7)
   }
 }
 
-#let is-leap(y) = calc.rem(y, 4) == 0 and (calc.rem(y, 100) != 0 or calc.rem(y, 400) == 0)
+// 28-year cycle, base year 1900
+#let calendar_28 = (
+  "B","C","D","E","M","A","B","C","K","F","G","A","I","D","E","F","N","B","C","D","L","G","A","B","J","E","F","G","H"
+)
+#let base_year = 1900
+#let cycle_letter(y) = calendar_28.at(calc.rem(y - base_year, 28))
 
-#let year-letter(y) = {
-  let jan1-wd = datetime(year: y, month: 1, day: 1).weekday() - 1
-  let offset = jan1-wd + (if is-leap(y) { 7 } else { 0 })
-  str.from-unicode(65 + calc.rem(offset, 14))
-}
+#let leap_color = red
+#let common_color = black
 
-// ──────────────────────────────
-// INDEX 1900–2200 – letter directly UNDER each year
-// ──────────────────────────────
+// ───────────── INDEX PAGE 1900–2200 ─────────────
 #align(center + horizon)[
   #text(22pt, weight: "bold")[Perpetual Calendar Index]
   #v(6pt)
   #text(15pt)[1900 – 2200]
   #v(1fr)
 ]
-
-#let is-leap(y) = calc.rem(y, 4) == 0 and (calc.rem(y, 100) != 0 or calc.rem(y, 400) == 0)
-
-#let letter(y) = {
-  let wd = calc.rem(datetime(year: y, month: 1, day: 1).weekday(), 7)  // 0=Sun…6=Sat
-  let offset = wd + if is-leap(y) { 7 } else { 0 }
-  str.from-unicode(65 + calc.rem(offset, 14))
-}
-
 #set text(size: 10.2pt)
 #grid(
   columns: 7,
@@ -52,10 +54,13 @@
   ..range(1900, 2201).map(y => {
     align(center)[
       #box(width: 100%)[
-        #text(weight: if is-leap(y) { "bold" } else { "medium" },
-              fill: if is-leap(y) { red } else { black })[#y]
+        #text(
+          weight: if is_leap(y) { "bold" } else { "medium" },
+          fill: if is_leap(y) { leap_color } else { common_color }
+        )[#y]
         #v(-10pt)
         #text(16pt, weight: "black")[#letter(y)]
+        #v(2pt)
       ]
     ]
   })
@@ -63,48 +68,51 @@
 
 #pagebreak()
 
-// ──────────────────────────────
-// 2. THE 14 CALENDAR LAYOUTS (A through N)
-// ──────────────────────────────
+// ───────────── 14 CALENDAR LAYOUTS (A–N) ─────────────
 #let layouts = (
-  (0,false),(1,false),(2,false),(3,false),(4,false),(5,false),(6,false),
-  (0,true), (1,true), (2,true), (3,true), (4,true), (5,true), (6,true)
+  (0, false), (1, false), (2, false), (3, false), (4, false), (5, false), (6, false),
+  (0, true), (1, true), (2, true), (3, true), (4, true), (5, true), (6, true)
 )
-
 #for (idx, (jan1wd, leap)) in layouts.enumerate() {
-  let letter = str.from-unicode(65 + idx)
+  let ltr = calendar_letters.at(idx)
   align(center)[
-    #text(24pt, weight: "bold")[#letter]
+    #text(24pt, weight: "bold")[#ltr]
     #v(-10pt)
     #text(13pt)[#if leap [*Leap year*] else [*Common year*]]
     #v(-6pt)
     #line(length: 100%, stroke: 1.8pt + gray.darken(40%))
   ]
-
   let months = ()
-  for m in range(1,13) {
-    let days = days-in-month(m, leap)
-    let start = first-wd-of-month(jan1wd, m, leap)
+  for m in range(1, 13) {
+    let days = days_in_month(m, leap)
+    let start = first_wd_of_month(jan1wd, m, leap)
+    if start == none { start = 0 }
     let cells = ()
     for i in range(42) {
       let day = i - start + 1
       if day > 0 and day <= days {
         let sunday = calc.rem(i, 7) == 0
         cells.push(
-          text(weight: if sunday {"bold"} else {"regular"},
-               fill: if sunday {red.darken(20%)} else {black},
-               size: 9.5pt,
-               str(day))
+          text(
+            weight: if sunday { "bold" } else { "regular" },
+            fill: if sunday { red.darken(20%) } else { black },
+            size: 9.5pt,
+            str(day)
+          )
         )
       } else { cells.push(none) }
     }
     months.push(
       block(width: 100%, inset: (bottom: 8pt))[
-        == #month-names.at(m - 1) #h(1fr)
-        #grid(columns: 7, gutter: 3pt,
+        == #month_names.at(m - 1) #h(1fr)
+        #grid(
+          columns: 7,
+          gutter: 3pt,
           ..weekdays.map(w => text(size: 8pt, weight: "medium", fill: gray.darken(30%), w))
         )
-        #align(right)[ #grid(columns: 7, gutter: 3pt, row-gutter: 5pt, ..cells) ]
+        #align(right)[
+          #grid(columns: 7, gutter: 3pt, row-gutter: 5pt, ..cells)
+        ]
       ]
     )
   }
@@ -113,28 +121,26 @@
 }
 
 #pagebreak()
-// ──────────────────────────────
-// FINAL PAGE – beautiful 8-column 28-year quick table
-// ──────────────────────────────
+
+// ───────────── FINAL PAGE: 28-year quick table ─────────────
 #align(center + horizon)[
   #text(14pt, weight: "bold")[How to use this perpetual calendar]
   #v(0.5em)
-
   #set text(10.8pt)
   #box(width: 94%, inset: 10pt, radius: 8pt, stroke: 1.2pt + luma(130))[
     #set par(justify: true, leading: 0.7em)
     #align(left)[
-    There are only *14 possible calendars* (A–N) in the Gregorian system.
+      There are only *14 possible calendars* (A–N) in the Gregorian system.
 
-    To find the correct page for any year:
-    1. Determine weekday of *Jan 1* that year (Sun=0, Mon=1 … Sat=6)  
-    2. If the year is a leap year → add 7  
-    3. Take the result mod 14 → number = letter (0=A, 1=B … 13=N)
+      To find the correct page for any year:
+      1. Determine weekday of *Jan 1* that year (Sun=0, Mon=1 … Sat=6)
+      2. If the year is a leap year → add 7
+      3. Take result mod 14 → number = letter (0=A … 13=N)
 
-    #v(1em)
-    *28-year cycle table* (repeats forever, except century-skip years)
+      #v(1em)
+      *28-year cycle table* (repeats forever, except century-skip years)
+      *Base year: 1900. Row index = year - 1900 mod 28*
     ]
-    
     #table(
       columns: 8,
       inset: 9pt,
@@ -145,22 +151,21 @@
         [*mod28*],[*Ltr*],[*mod28*],[*Ltr*],
         [*mod28*],[*Ltr*],[*mod28*],[*Ltr*],
       ),
-      "0",  "D",  "7",  "L",  "14", "G",  "21", "G",
-      "1",  "E",  "8",  "G",  "15", "H",  "22", "H",
-      "2",  "F",  "9",  "A",  "16", "C",  "23", "J",
-      "3",  "N", "10",  "B",  "17", "D",  "24", "K",
-      "4",  "B", "11",  "J",  "18", "E",  "25", "L",
-      "5",  "C", "12",  "E",  "19", "K",  "26", "M",
-      "6",  "D", "13",  "F",  "20", "F",  "27", "N",
+      "0",  "B",  "7",  "C",  "14", "E",  "21", "G",
+      "1",  "C",  "8",  "K",  "15", "F",  "22", "A",
+      "2",  "D",  "9",  "F",  "16", "N",  "23", "B",
+      "3",  "E", "10",  "G",  "17", "B",  "24", "J",
+      "4",  "M", "11",  "A",  "18", "C",  "25", "E",
+      "5",  "A", "12",  "I",  "19", "D",  "26", "F",
+      "6",  "B", "13",  "D",  "20", "L",  "27", "G",
     )
-
     #v(0.5em)
     *Examples*
     #align(left)[
-    - 2025 → mod 28 = 0 → letter *D*  
-    - 2036 → mod 28 = 11 → letter *J*  
-    - 2100 → not leap → Jan 1 = Tuesday (2) → letter *C*  
-    - 2000 → leap → Jan 1 = Saturday (6) → 6+7 = 13 → letter *N*
+      - 2026 → index: 2026-1900=126, mod 28 = 14 → letter E
+      - 2000 → index: 2000-1900=100, mod 28 = 16 → letter N
+      - 2100 → index: 2100-1900=200, mod 28 = 04 → letter M
+      - 2025 → index: 2025-1900=125, mod 28 = 13 → letter D
     ]
   ]
 ]
