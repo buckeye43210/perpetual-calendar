@@ -2,7 +2,7 @@
 
 /// Perpetual Calendar Cover Page (Typst)
 
-#set page(width: 5.5in, height: 8.5in, margin: (x: 0.5in, y: 0.7in), numbering: none)
+#set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.38in, left: 0.85in, right: 0.48in), numbering: none)
 
 #show heading: none
 
@@ -31,11 +31,7 @@
 
     #v(1.8em)
 
-    #text(
-      13pt,
-      weight: "light",
-      fill: luma(90)
-    )[
+    #text(13pt, weight: "light", fill: luma(90))[
     #align(left)[
       Instantly find the calendar for any Gregorian year.
       <br>
@@ -55,24 +51,42 @@
     #v(0.3em)
 
     #text(11.5pt, fill: navy.darken(30%), weight: "medium")[Created using Typst, 2025]
-    
-    #v(1em)
-
-    #line(length: 45%, stroke: 0.7pt + luma(120))
-
-    #v(0.3em)
-    #align(left)[
-    #text(10.5pt, fill: luma(80), weight: "light")[
-      This work is dedicated to the public domain under the
-      <br>
-      #link("https://creativecommons.org/publicdomain/zero/1.0/")[
-        Creative Commons Zero (CC0 1.0) license
-      ].
-      <br>
-      You may freely share, remix, adapt, and use it for any purpose, even commercially, with no restrictions.
-      ]]
   ]
 ]
+
+#pagebreak()
+
+#align(center)[
+    #text(20pt, weight: "bold", fill: navy)[License & Frontmatter]
+]
+    
+#text(10pt)[
+    This project is licensed under the Creative Commons Zero \
+    (CC0) 1.0 Universal License.
+    
+    *No Copyright*
+
+    The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work
+    worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law.
+    
+    You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission.
+    See Other Information below.
+    
+    *Other Information*
+
+    In no way are the patent or trademark rights of any person affected by CC0, nor are the rights that other persons may have in the work
+    or in how the work is used, such as publicity or privacy rights.
+    
+    Unless expressly stated otherwise, the person who associated a work with this deed makes no warranties about the work,
+    and disclaims liability for all uses of the work, to the fullest extent permitted by applicable law.
+    
+    When using or citing the work, you should not imply endorsement by the author or the affirmer.
+
+    For more details, see the full legal code at:   
+    #link("https://creativecommons.org/publicdomain/zero/1.0/")[#text(blue)[https://creativecommons.org]]
+]
+
+#pagebreak()
 
 #set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.38in, left: 0.85in, right: 0.48in), numbering: none)
 #set text(font: ("Liberation Serif", "DejaVu Serif"), size: 10pt)
@@ -154,7 +168,7 @@
     #v(-10pt)
     #text(13pt)[#if leap [*Leap year*] else [*Common year*]]
     #v(-6pt)
-    #line(length: 100%, stroke: 1.8pt + gray.darken(40%))
+    #line(length: 95%, stroke: 1.8pt + gray.darken(40%))
   ]
   let months = ()
   for m in range(1, 13) {
