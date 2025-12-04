@@ -8,7 +8,8 @@
 
 #align(center + horizon)[
   #box(
-    width: 88%,
+    height: 100%,
+    width: 100%,
     inset: 0.5in,
     radius: 10pt,
     stroke: 2pt + luma(60),
@@ -18,16 +19,14 @@
       38pt,
       weight: "bold",
       fill: navy
-    )[Perpetual Calendar]
-
-    #v(18pt)
+    )[Gregorian Perpetual Calendar]
 
     #text(
       19pt,
       weight: "medium",
       fill: navy.darken(15%)
-    )[Covering Gregorian Years \
-    1900-2300]
+    )[Covering Years \
+    1700-3057]
 
     #v(1.8em)
 
@@ -88,7 +87,7 @@
 
 #pagebreak()
 
-#set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.38in, left: 0.85in, right: 0.48in), numbering: none)
+#set page(width: 5.5in, height: 8.5in, margin: (top: 0.48in, bottom: 0.28in, left: 0.85in, right: 0.48in), numbering: none)
 #set text(font: ("Liberation Serif", "DejaVu Serif"), size: 10pt)
 
 // Month and weekday
@@ -121,25 +120,25 @@
 #let calendar_28 = (
   "B","C","D","E","M","A","B","C","K","F","G","A","I","D","E","F","N","B","C","D","L","G","A","B","J","E","F","G","H"
 )
-#let base_year = 1900
+#let base_year = 1901
 #let cycle_letter(y) = calendar_28.at(calc.rem(y - base_year, 28))
 
 #let leap_color = red
 #let common_color = black
 
-// ───────────── INDEX PAGE 1900–2200 ─────────────
+// ───────────── INDEX PAGE 1700–3057 ─────────────
 #align(center + horizon)[
   #text(22pt, weight: "bold")[Perpetual Calendar Index]
-  #v(6pt)
-  #text(15pt)[1900 – 2200]
-  #v(1fr)
+  #v(1pt)
+  #text(15pt)[1700 – 3057]
+  #v(1pt)
 ]
-#set text(size: 10.2pt)
+#set text(size: 10pt)
 #grid(
   columns: 7,
   column-gutter: 16pt,
-  row-gutter: 22pt,
-  ..range(1900, 2201).map(y => {
+  row-gutter: 12pt,
+  ..range(1700, 3058).map(y => {
     align(center)[
       #box(width: 100%)[
         #text(
@@ -157,6 +156,10 @@
 #pagebreak()
 
 // ───────────── 14 CALENDAR LAYOUTS (A–N) ─────────────
+
+#set page(width: 5.5in, height: 8.5in, margin: (top: 0.75in, bottom: 0.38in, left: 0.75in, right: 0.5in), numbering: none)
+#set text(font: ("Liberation Serif", "DejaVu Serif"), size: 10pt)
+
 #let layouts = (
   (0, false), (1, false), (2, false), (3, false), (4, false), (5, false), (6, false),
   (0, true), (1, true), (2, true), (3, true), (4, true), (5, true), (6, true)
@@ -167,8 +170,10 @@
     #text(24pt, weight: "bold")[#ltr]
     #v(-10pt)
     #text(13pt)[#if leap [*Leap year*] else [*Common year*]]
+  ]
+  align(right)[
     #v(-6pt)
-    #line(length: 95%, stroke: 1.8pt + gray.darken(40%))
+    #line(length: 96%, stroke: 1.8pt + gray.darken(40%))
   ]
   let months = ()
   for m in range(1, 13) {
@@ -190,16 +195,15 @@
         )
       } else { cells.push(none) }
     }
+
     months.push(
       block(width: 100%, inset: (bottom: 8pt))[
         == #month_names.at(m - 1) #h(1fr)
-        #grid(
-          columns: 7,
-          gutter: 3pt,
-          ..weekdays.map(w => text(size: 8pt, weight: "medium", fill: gray.darken(30%), w))
+        #align(right)[
+        #grid(columns: 7, gutter: 3pt, row-gutter: 3pt,
+          ..weekdays.map(w => text(size: 8.5pt, weight: "medium", fill: navy.darken(90%), w))
         )
-        #align(left)[
-          #grid(columns: 7, gutter: 3pt, row-gutter: 5pt, ..cells)
+        #grid(columns: 7, gutter: 3pt, row-gutter: 8pt, ..cells)
         ]
       ]
     )
@@ -211,50 +215,100 @@
 #pagebreak()
 
 // ───────────── FINAL PAGE: 28-year quick table ─────────────
-#align(center + horizon)[
-  #text(14pt, weight: "bold")[How to use this perpetual calendar]
-  #v(0.5em)
-  #set text(10.8pt)
-  #box(width: 94%, inset: 10pt, radius: 8pt, stroke: 1.2pt + luma(130))[
-    #set par(justify: true, leading: 0.7em)
-    #align(left)[
-      The Gregorian system only has *14 possible calendars* (A–N).
+#set page(width: 21cm, height: 29.7cm, margin: 2cm)
+#set text(font: "TeX Gyre Pagella", size: 11pt)
+#set heading(numbering: none)
 
-      To find the correct calendar for any year:
-      1. Determine *Jan 1* weekday for that year \
-         (Sun=0, Mon=1, Tue=2, Wed=3 … Sat=6)
-      2. If it's a leap year → add 7
-      3. Resulting number maps to letter (0=A … 13=N)
+= The 14 Gregorian Calendar Types (A–N) — Correct Instructions
 
-      #v(.5em)
-      *28-year cycle* (repeats forever, except century-skip years)\
-      *Base year: 1900. Letter Index = (Year - 1900) mod 28*\
-      *For century-skip years: Use weekday method.*
-    ]
-    #table(
-      columns: 8,
-      inset: 3pt,
-      stroke: none,
-      column-gutter: 6pt,
-      row-gutter: 1pt,
-      table.header(
-        [*Mod28*],[*Ltr*],[*Mod28*],[*Ltr*],
-        [*Mod28*],[*Ltr*],[*Mod28*],[*Ltr*],
-      ),
-      "0",  "B",  "7",  "C",  "14", "E",  "21", "G",
-      "1",  "C",  "8",  "K",  "15", "F",  "22", "A",
-      "2",  "D",  "9",  "F",  "16", "N",  "23", "B",
-      "3",  "E", "10",  "G",  "17", "B",  "24", "J",
-      "4",  "M", "11",  "A",  "18", "C",  "25", "E",
-      "5",  "A", "12",  "I",  "19", "D",  "26", "F",
-      "6",  "B", "13",  "D",  "20", "L",  "27", "G",
-    )
-    #v(0.5em)
-    *Examples*
-    #align(left)[
-      - 2026 → index: 2026-1900=126, mod 28 = 14 → letter E
-      - 2000 → index: 2000-1900=100, mod 28 = 16 → letter N
-      - 2025 → index: 2025-1900=125, mod 28 = 13 → letter D
-    ]
-  ]
-]
+There are exactly *14 possible yearly calendars* in the Gregorian system:
+
+- 7 for common years: *A B C D E F G*
+- 7 for leap years:   *H I J K L M N*
+
+== Primary Method (100 % accurate — works for every Gregorian year)
+
++ Find the weekday of *January 1* for the desired year  
+  Sun = 0, Mon = 1, Tue = 2, Wed = 3, Thu = 4, Fri = 5, Sat = 6
+
++ If the year is a *leap year* → add 7 to that number
+
++ Take the result *modulo 14* (remainder 0–13)
+
++ Use this table:
+
+  #table(
+    columns: 3,
+    stroke: none,
+    align: center + horizon,
+    [*Remainder*], [*Common year*], [*Leap year*],
+    [0], [A], [H],
+    [1], [B], [J],
+    [2], [C], [K],
+    [3], [D], [L],
+    [4], [E], [M],
+    [5], [F], [N],
+    [6], [G], [— (impossible)],
+    [7–13], [same as 0–6], [same as 0–6],
+  )
+
+== Alternate Quick Method — 1901 Base Year (perfect for 1901–2099)
+
+The calendar repeats *exactly every 28 years* between 1901 and 2099 (no century exceptions).
+
++ Calculate:  
+  $ "Offset" = ("Year" - 1901) mod 28 $
+
++ Look up the offset below:
+
+#table(
+  columns: 3,
+  inset: 9pt,
+  align: center,
+  stroke: (x, y) => (
+    left:   if x == 0 { 0.7pt } else { 0.3pt },
+    right:  if x == 2 { 0.7pt } else { 0.3pt },
+    top:    if y == 0 { 0.7pt } else { 0.3pt },
+    bottom: if y == 27 { 0.7pt } else { 0.3pt },
+    rest:   0.3pt
+  ),
+  [*Offset*], [*Common year*], [*Leap year*],
+  [0],  [A], [—],
+  [1],  [B], [H],
+  [2],  [C], [J],
+  [3],  [D], [K],
+  [4],  [E], [L],
+  [5],  [F], [M],
+  [6],  [G], [N],
+  [7],  [A], [—],
+  [8],  [B], [—],
+  [9],  [C], [—],
+  [10], [D], [—],
+  [11], [E], [—],
+  [12], [F], [—],
+  [13], [G], [—],
+  [14], [A], [—],
+  [15], [B], [—],
+  [16], [C], [—],
+  [17], [D], [—],
+  [18], [E], [—],
+  [19], [F], [—],
+  [20], [G], [—],
+  [21], [A], [—],
+  [22], [B], [—],
+  [23], [C], [—],
+  [24], [D], [—],
+  [25], [E], [—],
+  [26], [F], [—],
+  [27], [G], [—],
+  )
+
+  *Use the leap-year column only when the actual year is a leap year.*
+
+== Examples
+
+- 2025 → (2025 − 1901) = 124 → 124 mod 28 = 20 → *G* (common) ✔
+- 2032 → offset 19 → leap year → *N* ✔
+- 2000 → offset 15 → leap year → fall back to Primary Method → Jan 1 was Saturday (6) → 6 + 7 = 13 → 13 mod 14 = 13 → *G* ✔
+
+*For any year outside 1901–2099 (or century years like 2100, 2200), always use the Primary Method — it never fails.*

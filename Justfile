@@ -11,3 +11,8 @@ typst:
 watch:
 	echo "Recompiling after change detection..."
 	typst watch perpetual_calendar.typ perpetual_calendar.pdf
+
+booklet:
+	echo "Imposing PDF into 2up booklet..."
+	pdfbook2 --paper letterpaper perpetual_calendar.pdf
+
